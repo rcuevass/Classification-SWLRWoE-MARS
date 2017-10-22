@@ -20,6 +20,8 @@ library(hmeasure)
 #bin_data(dg.train$NonBankTradesDq01, bins=4, binType = "explicit")
 #bin_data(das$wt, bins=c(-Inf, 250, 322, Inf), binType = "explicit")
 
+source("./scripts/binning_functions.R")
+
 
 # Import data; included as part of smbinning
 # This is a simulated dataset based on six months of information 
@@ -114,38 +116,19 @@ cuts_NonBankTradesDq02
 
 cuts_TOB
 woe_TOB
-BinVar_TOB <- function(x){
-  if (x<=17 & !is.na(x)) {return(-0.7662)}
-  if (x > 17 & x<=30 & !is.na(x)) {return(-0.3828)}
-  if (x > 30 & x<=63 & !is.na(x)) {return(0.3784)}
-  if (x > 63 & !is.na(x)) {return(1.1708)}
-  if (is.na(x)) {return(0.0804)}
-}
+
 
 cuts_Bal01
 woe_Bal01
-BinVar_Bal01 <- function(x){
-  if (x<=406.51 & !is.na(x)) {return(0.5447)}
-  if (x > 406.51 & x<=3181.91 & !is.na(x)) {return(-0.3282)}
-  if (x > 3181.91 & !is.na(x)) {return(0.3059)}
-  
-}
+
 
 cuts_NonBankTradesDq01
 woe_NonBankTradesDq01
-BinVar_NonBankTradesDq01 <- function(x){
-  if (x<=0 & !is.na(x)) {return(1.0251)}
-  if (x > 0 & x<=1 & !is.na(x)) {return(-1.2070)}
-  if (x > 1 & !is.na(x)) {return(-2.3845)}
-}
+
 
 cuts_NonBankTradesDq02
 woe_NonBankTradesDq02
-BinVar_NonBankTradesDq02 <- function(x){
-  if (x<=0 & !is.na(x)) {return(0.8176)}
-  if (x > 0 & x<=1 & !is.na(x)) {return(-1.2022)}
-  if (x > 1 & !is.na(x)) {return(-2.3176)}
-}
+
 
 
 setLabel<-dg$FlagSample
