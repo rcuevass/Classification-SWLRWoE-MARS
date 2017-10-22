@@ -237,7 +237,7 @@ scores<-predict(object = LRWOE,
 results <- HMeasure(dh.test$target,scores)
 
 # Save ROC to file
-jpeg('./plots/ROC_SWLRWoE_extra_silly_vars.jpg')
+jpeg('./plots/ROC_SWLRWoE_allVars.jpg')
 plotROC(results)
 dev.off()
 
