@@ -13,6 +13,12 @@ library(smbinning)
 library(glmnet)
 library(earth)
 library(hmeasure)
+# mltools can be useful in the future
+#library(mltools)
+#https://stackoverflow.com/questions/6104836/splitting-a-continuous-variable-into-equal-sized-groups
+#bin_data(dg.train$NonBankTradesDq06, bins=5, binType = "quantile")
+#bin_data(dg.train$NonBankTradesDq01, bins=4, binType = "explicit")
+#bin_data(das$wt, bins=c(-Inf, 250, 322, Inf), binType = "explicit")
 
 
 # Import data; included as part of smbinning
@@ -31,8 +37,6 @@ rm(chileancredit)
 # Remove records where target is missing
 dg<-dg[which(!is.na(dg$FlagGB)),]
 
-
-
 # We check names of columns
 names(dg)
 # types of vars in dataframe
@@ -47,12 +51,65 @@ vars
 dg.train <- subset(dg,FlagSample==1) 
 dg.test <- subset(dg,FlagSample==0)
 
-# Let's choose only two variables to explore ideas
-binResults_TOB<-smbinning(df=dg.train,y="FlagGB",x="TOB",p=0.05)
-binResults_Bal01<-smbinning(df=dg.train,y="FlagGB",x="Bal01",p=0.05)
-# Select cuts in binning
+# Let's do OPTIMAL binning on predictors
+binResults_TOB<-smbinning(df=dg.train,y="FlagGB",
+                          x="TOB",p=0.05)
+binResults_Bal01<-smbinning(df=dg.train,y="FlagGB",
+                            x="Bal01",p=0.05)
+binResults_MtgBal01<-smbinning(df=dg.train,y="FlagGB",
+                               x="MtgBal01",p=0.05)
+binResults_NonBankTradesDq01<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq01",p=0.05)
+binResults_NonBankTradesDq02<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq02",p=0.05)
+binResults_NonBankTradesDq03<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq03",p=0.05)
+binResults_NonBankTradesDq04<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq04",p=0.05)
+binResults_NonBankTradesDq05<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq05",p=0.05)
+binResults_NonBankTradesDq06<-smbinning(df=dg.train,y="FlagGB",
+                                        x="NonBankTradesDq06",p=0.05)
+
+# Select cuts in binning for each numeric variable
 cuts_TOB<-binResults_TOB$cuts
+cuts_Bal01<-binResults_Bal01$cuts
+cuts_MtgBal01<-binResults_MtgBal01$cuts
+cuts_NonBankTradesDq01<-binResults_NonBankTradesDq01$cuts
+cuts_NonBankTradesDq02<-binResults_NonBankTradesDq02$cuts
+cuts_NonBankTradesDq03<-binResults_NonBankTradesDq03$cuts
+cuts_NonBankTradesDq04<-binResults_NonBankTradesDq04$cuts
+cuts_NonBankTradesDq05<-binResults_NonBankTradesDq05$cuts
+cuts_NonBankTradesDq06<-binResults_NonBankTradesDq06$cuts
+
 cuts_TOB
+cuts_Bal01
+cuts_MtgBal01
+sum(dg.train$MtgBal01>=0)
+sum(dg.train$MtgBal01<0)
+
+cuts_NonBankTradesDq01
+sum(dg.train$NonBankTradesDq01>=1)
+sum(dg.train$NonBankTradesDq01>=0 & dg.train$NonBankTradesDq01 < 1)
+
+cuts_NonBankTradesDq02
+cuts_NonBankTradesDq03
+cuts_NonBankTradesDq04
+cuts_NonBankTradesDq05
+cuts_NonBankTradesDq06
+
+
+sum(dg.train$NonBankTradesDq01 < 10.5)
+hist(dg.train[which(dg.train$NonBankTradesDq01 < 2),]$NonBankTradesDq01 )
+sum(dg.train$MtgBal01 >=10.5 & dg.train$MtgBal01 < 21)
+
+
+cuts_MtgBal01
+cuts_NonBankTradesDq06
+hist(dg.train$NonBankTradesDq06)
+unique(dg.train$NonBankTradesDq06)
+
+
 # Select WoE associated with each bin
 woe_TOB<-binResults_TOB$ivtable$WoE[1:(length(cuts_TOB)+2)]
 woe_TOB
