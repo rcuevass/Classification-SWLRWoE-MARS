@@ -26,3 +26,27 @@ BinVar_NonBankTradesDq02 <- function(x){
   if (x > 0 & x<=1 & !is.na(x)) {return(-1.2022)}
   if (x > 1 & !is.na(x)) {return(-2.3176)}
 }
+
+# Adding silly bining vars
+
+BinVar_NonBankTradesDq03 <- function(x){
+  if (x<=0 & !is.na(x)) {return(0.7385)}
+  if (x > 0 & !is.na(x)) {return(-1.7681)}
+}
+
+BinVar_NonBankTradesDq04 <- function(x){
+  if (x<=0 & !is.na(x)) {return(0.5849)}
+  if (x > 0 & !is.na(x)) {return(-1.6487)}
+}
+
+BinVar_NonBankTradesDq05 <- function(x){
+  if (x<=0 & !is.na(x)) {return(0.5063)}
+  if (x > 0 & !is.na(x)) {return(-1.5795)}
+}
+
+BinVar_NonBankTradesDq06 <- function(x){
+  if (x<=0 & !is.na(x)) {return(0.3931)}
+  if (x > 0 & !is.na(x)) {return(-1.4648)}
+}
+
+
