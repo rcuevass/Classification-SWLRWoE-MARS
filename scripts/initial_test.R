@@ -88,27 +88,28 @@ cuts_Bal01
 cuts_NonBankTradesDq01
 cuts_NonBankTradesDq02
 
+# Get WoE for each of the avobe variables
+woe_TOB<-binResults_TOB$ivtable$WoE[1:(length(cuts_TOB)+2)]
+sum(is.na(dg.train$TOB))
+sum(is.na(dg.test$TOB))
+woe_TOB
 
-cuts_NonBankTradesDq01
-sum(dg.train$NonBankTradesDq01>=1)
-sum(dg.train$NonBankTradesDq01>=0 & dg.train$NonBankTradesDq01 < 1)
+woe_Bal01<-binResults_Bal01$ivtable$WoE[1:(length(cuts_Bal01)+1)]
+sum(is.na(dg.train$Bal01))
+sum(is.na(dg.test$Bal01))
+woe_Bal01
 
-cuts_NonBankTradesDq02
-cuts_NonBankTradesDq03
-cuts_NonBankTradesDq04
-cuts_NonBankTradesDq05
-cuts_NonBankTradesDq06
+woe_NonBankTradesDq01<-
+  binResults_NonBankTradesDq01$ivtable$WoE[1:(length(cuts_NonBankTradesDq01)+1)]
+sum(is.na(dg.train$NonBankTradesDq01))
+sum(is.na(dg.test$NonBankTradesDq01))
+woe_NonBankTradesDq01
 
-
-sum(dg.train$NonBankTradesDq01 < 10.5)
-hist(dg.train[which(dg.train$NonBankTradesDq01 < 2),]$NonBankTradesDq01 )
-sum(dg.train$MtgBal01 >=10.5 & dg.train$MtgBal01 < 21)
-
-
-cuts_MtgBal01
-cuts_NonBankTradesDq06
-hist(dg.train$NonBankTradesDq06)
-unique(dg.train$NonBankTradesDq06)
+woe_NonBankTradesDq02<-
+  binResults_NonBankTradesDq02$ivtable$WoE[1:(length(cuts_NonBankTradesDq02)+1)]
+sum(is.na(dg.train$NonBankTradesDq02))
+sum(is.na(dg.test$NonBankTradesDq02))
+woe_NonBankTradesDq02
 
 
 # Select WoE associated with each bin
