@@ -221,7 +221,7 @@ earth_model$coefficients
 
 
 plot(earth_model)
-#plotd(earth_model)
+plotd(earth_model)
 
 
 dh.test[c("TOB.imp","Bal01",
