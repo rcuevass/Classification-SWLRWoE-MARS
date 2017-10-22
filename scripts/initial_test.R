@@ -256,3 +256,4 @@ dfPerf <- data.frame(method,aucs,kss)
 # Save data frame to csv file
 write.csv(dfPerf,file = "./results/summary_01.csv")
 
+dfPerf
