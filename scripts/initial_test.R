@@ -199,7 +199,12 @@ scores<-predict(object = LRWOE,
 
 # get metrics
 results <- HMeasure(dh.test$target,scores)
+
+# Save ROC to file
+jpeg('./plots/ROC_SWLRWoE.jpg')
 plotROC(results)
+dev.off()
+
 summary(results)
 
 
@@ -226,8 +231,10 @@ earth_model<- earth(target ~ TOB.imp + Bal01
 
 #earth_model<- earth(target ~ TOB + Bal01, data = dh.train,na.action = na.fail)
 ls(earth_model)
-earth_model$coefficients
+
 cat(format(earth_model), "\n")
+earth_model$coefficients
+
 
 
 plot(earth_model)
@@ -245,7 +252,11 @@ scores_earth<-predict(object = earth_model,
                       type="response")
 
 results_earth <- HMeasure(dh.test$target,scores_earth)
+
+# Save ROC to file
+jpeg('./plots/ROC_MARS.jpg')
 plotROC(results_earth)
+dev.off()
 summary(results_earth)
 
 results$metrics$AUC
@@ -253,3 +264,12 @@ results_earth$metrics$AUC
 
 results$metrics$KS
 results_earth$metrics$KS
+
+# Create df with metrics of performance
+method<-c("SWLWoE","MARS")
+aucs<-c(results$metrics$AUC,results_earth$metrics$AUC)
+kss<-c(results$metrics$KS,results_earth$metrics$KS)
+dfPerf <- data.frame(method,aucs,kss)
+# Save data frame to csv file
+write.csv(dfPerf,file = "./results/summary_01.csv")
+
