@@ -318,9 +318,9 @@ results_earth$metrics$KS
 method<-c("SWLWoE","MARS")
 auc<-c(results$metrics$AUC,results_earth$metrics$AUC)
 ks<-c(results$metrics$KS,results_earth$metrics$KS)
-dfPerf <- data.frame(method,aucs,kss)
+dfPerfExtra <- data.frame(method,auc,ks)
 # Save data frame to csv file
-write.csv(dfPerf,file = "./results/summary_02_extra_silly_vars.csv")
+write.csv(dfPerfExtra,file = "./results/summary_02_extra_silly_vars.csv")
 
 # Let's check final list of variables
 #LR
@@ -333,6 +333,3 @@ write.csv(dfCoeffLR,file = "./results/coeff_SWLRWoE_with_extra_silly_vars.csv")
 earth_model$coefficients
 dfCoeffMARS <- as.data.frame(as.matrix(earth_model$coefficients))
 write.csv(dfCoeffMARS,file = "./results/coeff_MARS_with_extra_silly_vars.csv")
-
-
-
