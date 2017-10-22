@@ -1,21 +1,30 @@
-# Binning/ LR and MARS
+# This script has the main intention of comparing lasso regresion
+# for SWLRWoE
+# with Multivariate adaptive regression splines (MARS) for 
+# classification
 
-# Package for optinal binning
-#install.packages("smbinning")
+# Be sure to have installed the following packages
+# - smbinning (allows for binning of variables)
+# - glment (allows for lasso regression)
+# - earth (for MARS)
+# - hmeasure (for metrics of performance)
+#
 library(smbinning)
-
-# Package for elastic net
 library(glmnet)
-
-library(hmeasure)
-
-install.packages("earth")
 library(earth)
-
+library(hmeasure)
 
 
 # Import data; included as part of smbinning
+# This is a simulated dataset based on six months of information 
+# collected by a Chilean Bank whose objective
+# was to develop a credit scoring model to determine the probability 
+# of default within the next 12 months. 
+# The target variable is FlagGB, which represents the binary status
+# of default (0) and not default(1)
 data("chileancredit")
+
+# Change name of dataset for simplicity
 dg<-chileancredit
 rm(chileancredit)
 
@@ -26,8 +35,7 @@ dg<-dg[which(!is.na(dg$FlagGB)),]
 dg.train=subset(dg,FlagSample==1) 
 dg.test=subset(dg,FlagSample==0)
 
-
-
+# We check names of columns
 names(dg)
 # Let's choose only two variables to explore ideas
 binResults_TOB<-smbinning(df=dg.train,y="FlagGB",x="TOB",p=0.05)
@@ -59,7 +67,7 @@ BinVar_Bal01 <- function(x){
   if (x<=406.51 & !is.na(x)) {return(0.5447)}
   if (x > 406.51 & x<=3181.91 & !is.na(x)) {return(-0.3282)}
   if (x > 3181.91 & !is.na(x)) {return(0.3059)}
- 
+  
 }
 
 
@@ -85,16 +93,16 @@ unique(dh.train$target)
 as.factor(dh.train$target)
 
 LRWOE <- cv.glmnet(x = as.matrix(dh.train[c("TOB_WOE","Bal01_WOE")]),
-             y = as.factor(dh.train$target),
-             alpha = 1,family = "binomial",
-             type.measure = "auc")
+                   y = as.factor(dh.train$target),
+                   alpha = 1,family = "binomial",
+                   type.measure = "auc")
 
 coef(LRWOE,s=LRWOE$lambda.min)
 
 scores<-predict(object = LRWOE,
-                        newx = as.matrix(dh.test[c("TOB_WOE","Bal01_WOE")]),
-                        type="response")
-        
+                newx = as.matrix(dh.test[c("TOB_WOE","Bal01_WOE")]),
+                type="response")
+
 scores
 
 results <- HMeasure(dh.test$target,scores)
