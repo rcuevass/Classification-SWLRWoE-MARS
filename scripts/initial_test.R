@@ -203,16 +203,27 @@ plotROC(results)
 summary(results)
 
 
-dh.train$TOB.imp.mean <-
+# We check missing values to do imputation before MARS
+summary(dh[c("TOB","Bal01",
+               "NonBankTradesDq01",
+               "NonBankTradesDq02")])
+
+# only TOB variables requires imputation; we do so with median
+dh.train$TOB.imp <-
   ifelse(is.na(dh.train$TOB), median(dh.train$TOB, na.rm=TRUE),
          dh.train$TOB)
 
-dh.test$TOB.imp.mean <-
+dh.test$TOB.imp <-
   ifelse(is.na(dh.test$TOB), median(dh.train$TOB, na.rm=TRUE),
          dh.test$TOB)
 
-earth_model<- earth(target ~ TOB.imp.mean + Bal01, data = dh.train,
+# We use MARS
+earth_model<- earth(target ~ TOB.imp + Bal01 
+                    + NonBankTradesDq01
+                    + NonBankTradesDq02,
+                    data = dh.train,
                     degree = 1)
+
 #earth_model<- earth(target ~ TOB + Bal01, data = dh.train,na.action = na.fail)
 ls(earth_model)
 earth_model$coefficients
@@ -222,10 +233,16 @@ cat(format(earth_model), "\n")
 plot(earth_model)
 #plotd(earth_model)
 
-scores_earth<-predict(object = earth_model,
-                      (dh.test[c("TOB.imp.mean","Bal01")]),
-                      type="response")
 
+dh.test[c("TOB.imp","Bal01",
+          "NonBankTradesDq01",
+          "NonBankTradesDq02")]
+
+scores_earth<-predict(object = earth_model,
+                      dh.test[c("TOB.imp","Bal01",
+                                 "NonBankTradesDq01",
+                                 "NonBankTradesDq02")],
+                      type="response")
 
 results_earth <- HMeasure(dh.test$target,scores_earth)
 plotROC(results_earth)
