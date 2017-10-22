@@ -82,11 +82,12 @@ cuts_NonBankTradesDq04<-binResults_NonBankTradesDq04$cuts
 cuts_NonBankTradesDq05<-binResults_NonBankTradesDq05$cuts
 cuts_NonBankTradesDq06<-binResults_NonBankTradesDq06$cuts
 
+# Only the following vars have more than one cut point
 cuts_TOB
 cuts_Bal01
-cuts_MtgBal01
-sum(dg.train$MtgBal01>=0)
-sum(dg.train$MtgBal01<0)
+cuts_NonBankTradesDq01
+cuts_NonBankTradesDq02
+
 
 cuts_NonBankTradesDq01
 sum(dg.train$NonBankTradesDq01>=1)
