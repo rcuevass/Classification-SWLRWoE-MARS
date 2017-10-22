@@ -88,7 +88,7 @@ cuts_Bal01
 cuts_NonBankTradesDq01
 cuts_NonBankTradesDq02
 
-# Get WoE for each of the avobe variables
+# Get WoE for each of the above variables
 woe_TOB<-binResults_TOB$ivtable$WoE[1:(length(cuts_TOB)+2)]
 sum(is.na(dg.train$TOB))
 sum(is.na(dg.test$TOB))
@@ -110,18 +110,10 @@ woe_NonBankTradesDq02<-
 sum(is.na(dg.train$NonBankTradesDq02))
 sum(is.na(dg.test$NonBankTradesDq02))
 woe_NonBankTradesDq02
+cuts_NonBankTradesDq02
 
-
-# Select WoE associated with each bin
-woe_TOB<-binResults_TOB$ivtable$WoE[1:(length(cuts_TOB)+2)]
+cuts_TOB
 woe_TOB
-cuts_Bal01<-binResults_Bal01$cuts
-cuts_Bal01
-View(binResults_Bal01$ivtable)
-# Select WoE associated with each bin
-woe_Bal01<-binResults_Bal01$ivtable$WoE[1:(length(cuts_Bal01)+1)]
-woe_Bal01
-
 BinVar_TOB <- function(x){
   if (x<=17 & !is.na(x)) {return(-0.7662)}
   if (x > 17 & x<=30 & !is.na(x)) {return(-0.3828)}
@@ -139,33 +131,62 @@ BinVar_Bal01 <- function(x){
   
 }
 
+cuts_NonBankTradesDq01
+woe_NonBankTradesDq01
+BinVar_NonBankTradesDq01 <- function(x){
+  if (x<=0 & !is.na(x)) {return(1.0251)}
+  if (x > 0 & x<=1 & !is.na(x)) {return(-1.2070)}
+  if (x > 1 & !is.na(x)) {return(-2.3845)}
+}
+
+cuts_NonBankTradesDq02
+woe_NonBankTradesDq02
+BinVar_NonBankTradesDq02 <- function(x){
+  if (x<=0 & !is.na(x)) {return(0.8176)}
+  if (x > 0 & x<=1 & !is.na(x)) {return(-1.2022)}
+  if (x > 1 & !is.na(x)) {return(-2.3176)}
+}
+
 
 setLabel<-dg$FlagSample
 target<-dg$FlagGB
+##
 TOB<-dg$TOB
 TOB_WOE <- as.numeric(lapply(dg$TOB, BinVar_TOB))
+##
 Bal01<-dg$Bal01
 Bal01_WOE <- as.numeric(lapply(dg$Bal01, BinVar_Bal01))
+##
+NonBankTradesDq01<-dg$NonBankTradesDq01
+NonBankTradesDq01_WOE <- as.numeric(lapply(dg$NonBankTradesDq01,
+                                           BinVar_NonBankTradesDq01))
+##
+NonBankTradesDq02<-dg$NonBankTradesDq02
+NonBankTradesDq02_WOE <- as.numeric(lapply(dg$NonBankTradesDq02,
+                                           BinVar_NonBankTradesDq02))
 
-dh<-data.frame(TOB,Bal01,TOB_WOE,Bal01_WOE,target,setLabel)
+#
+dh<-data.frame(TOB,Bal01,NonBankTradesDq01,NonBankTradesDq02,
+               TOB_WOE,Bal01_WOE,NonBankTradesDq01_WOE,NonBankTradesDq02_WOE,
+               target,setLabel)
+
+# Check head of dataframe
 head(dh,10)
-hist(dh$target)
-# Select training and test sets
+
 # Select training and test sets
 dh.train=subset(dh,setLabel==1) 
 dh.test=subset(dh,setLabel==0)
 
 
-
-dh[c("TOB_WOE","Bal01_WOE")]
-unique(dh.train$target)
-as.factor(dh.train$target)
-
-LRWOE <- cv.glmnet(x = as.matrix(dh.train[c("TOB_WOE","Bal01_WOE")]),
+# Execute regression
+LRWOE <- cv.glmnet(x = as.matrix(dh.train[c("TOB_WOE","Bal01_WOE",
+                                            "NonBankTradesDq01_WOE",
+                                            "NonBankTradesDq02_WOE")]),
                    y = as.factor(dh.train$target),
                    alpha = 1,family = "binomial",
                    type.measure = "auc")
 
+#check coefficients
 coef(LRWOE,s=LRWOE$lambda.min)
 
 scores<-predict(object = LRWOE,
