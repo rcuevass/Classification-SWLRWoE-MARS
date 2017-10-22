@@ -189,15 +189,19 @@ LRWOE <- cv.glmnet(x = as.matrix(dh.train[c("TOB_WOE","Bal01_WOE",
 #check coefficients
 coef(LRWOE,s=LRWOE$lambda.min)
 
+
+# get predicted scores
 scores<-predict(object = LRWOE,
-                newx = as.matrix(dh.test[c("TOB_WOE","Bal01_WOE")]),
+                newx = as.matrix(dh.test[c("TOB_WOE","Bal01_WOE",
+                                           "NonBankTradesDq01_WOE",
+                                           "NonBankTradesDq02_WOE")]),
                 type="response")
 
-scores
-
+# get metrics
 results <- HMeasure(dh.test$target,scores)
 plotROC(results)
 summary(results)
+
 
 dh.train$TOB.imp.mean <-
   ifelse(is.na(dh.train$TOB), median(dh.train$TOB, na.rm=TRUE),
