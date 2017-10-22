@@ -333,3 +333,5 @@ write.csv(dfCoeffLR,file = "./results/coeff_SWLRWoE_with_extra_silly_vars.csv")
 earth_model$coefficients
 dfCoeffMARS <- as.data.frame(as.matrix(earth_model$coefficients))
 write.csv(dfCoeffMARS,file = "./results/coeff_MARS_with_extra_silly_vars.csv")
+
+dfPerfExtra
