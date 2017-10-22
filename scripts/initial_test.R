@@ -31,12 +31,22 @@ rm(chileancredit)
 # Remove records where target is missing
 dg<-dg[which(!is.na(dg$FlagGB)),]
 
-# Select training and test sets
-dg.train=subset(dg,FlagSample==1) 
-dg.test=subset(dg,FlagSample==0)
+
 
 # We check names of columns
 names(dg)
+# types of vars in dataframe
+str(dg)
+
+# Let's focus first on numeric variables only
+dg <- dg[,sapply(dg,is.numeric)]
+vars<-names(dg)
+vars
+
+# Select training and test sets
+dg.train <- subset(dg,FlagSample==1) 
+dg.test <- subset(dg,FlagSample==0)
+
 # Let's choose only two variables to explore ideas
 binResults_TOB<-smbinning(df=dg.train,y="FlagGB",x="TOB",p=0.05)
 binResults_Bal01<-smbinning(df=dg.train,y="FlagGB",x="Bal01",p=0.05)
